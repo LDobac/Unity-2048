@@ -1,2 +1,6 @@
 *.sln
 *.csproj
+.vscode/
+obj/
+Temp/
+.vs/
