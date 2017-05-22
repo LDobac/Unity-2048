@@ -52,22 +52,7 @@ public class NumberBlockManegement : MonoBehaviour
                 {
                     if(numBlocks[i,j] != null)
                     {
-                        NumBlock numBlock = numBlocks[i,j].GetComponent<NumBlock>();                    
-                        if(numBlock.isMove)
-                        {
-                            float speed = numBlock.blockMoveSpeed * Time.deltaTime;
-                            Vector3 current = numBlocks[i,j].transform.position;
-                            Vector3 target = numBlockBase[numBlock.targetY,numBlock.targetX].transform.position;
-
-                            numBlocks[i,j].transform.position = Vector3.MoveTowards(current,target, speed);
-
-                            if(numBlocks[i,j].transform.position == target)
-                            {
-                                numBlock.MoveEnd();
-                            }
-
-                            once = true;
-                        }
+                        if(numBlocks[i,j].GetComponent<NumBlock>().IsMove) once = true;
                     }
                 }
             }
@@ -133,7 +118,8 @@ public class NumberBlockManegement : MonoBehaviour
                     }
                     else
                     {
-                        if(numBlocks[y,x - 1].GetComponent<NumBlock>().BlockNumber == numBlocks[y,x].GetComponent<NumBlock>().BlockNumber)
+                        if(numBlocks[y,x - 1].GetComponent<NumBlock>().BlockNumber == numBlocks[y,x].GetComponent<NumBlock>().BlockNumber
+                            && !(numBlocks[y,x - 1].GetComponent<NumBlock>().IsCombine || numBlocks[y,x].GetComponent<NumBlock>().IsCombine))
                         {
                             MoveBlock(x,y,x - 1,y,false);
                             CombineBlock(x,y,x - 1,y);
@@ -497,7 +483,7 @@ public class NumberBlockManegement : MonoBehaviour
             return;
         }
 
-        numBlocks[fromY,fromX].GetComponent<NumBlock>().Move(byX,byY);
+        numBlocks[fromY,fromX].GetComponent<NumBlock>().Move(numBlockBase[byY,byX].transform.position);
 
         if(isAssign)
         {
@@ -510,10 +496,7 @@ public class NumberBlockManegement : MonoBehaviour
 
     private void CombineBlock(int x,int y ,int cX,int cY)
     {
-        //numBlocks[y,x].GetComponent<NumBlock>().Combine();
-
-        //Destroy(numBlocks[cY,cX]);
-
-        //numBlocks[cY,cX] = null;
+        numBlocks[y,x].GetComponent<NumBlock>().CombineBlock(numBlocks[cY,cX].GetComponent<NumBlock>());
+        numBlocks[cY,cX] = null;
     }
 }

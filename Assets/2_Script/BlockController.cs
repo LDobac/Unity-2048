@@ -1,9 +1,17 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.SceneManagement;
+using UnityEngine.UI;
 
 public class BlockController : MonoBehaviour 
 {
+	public Text curScoreText;
+	public Text bestScoreText;
+
+	private float curScore = 0.0f;
+	private float bestScore = 0.0f;
+
 	private NumberBlockManegement blockManegement;
 
 	private void Start()
@@ -29,5 +37,14 @@ public class BlockController : MonoBehaviour
 		{
 			blockManegement.ToRight();
 		}
+
+		curScoreText.text = curScore.ToString();
+		bestScoreText.text = bestScore.ToString();
+
+	}
+
+	public void RestartButtonPush()
+	{
+		SceneManager.LoadScene("Game");
 	}	
 }
