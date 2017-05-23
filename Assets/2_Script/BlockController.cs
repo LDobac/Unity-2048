@@ -27,22 +27,6 @@ public class BlockController : MonoBehaviour
 	{
 		if(!isPause)
 		{
-			if(!(blockManegement.CanBlockMove() || blockManegement.IsBlockMove))
-			{
-				if(!(blockManegement.CanBlockMove() || blockManegement.IsBlockMove))
-				{		
-					if(!(blockManegement.CanBlockMove() || blockManegement.IsBlockMove))
-				{	
-					if(!(blockManegement.CanBlockMove() || blockManegement.IsBlockMove))
-				{			
-					Pause();
-
-					OverUI.SetActive(true);
-				}
-				}
-				}
-			}
-
 			if(Input.GetKeyDown(KeyCode.UpArrow))
 			{
 				blockManegement.ToUp();
@@ -59,6 +43,20 @@ public class BlockController : MonoBehaviour
 			{
 				blockManegement.ToRight();
 			}
+
+			StartCoroutine(CC());
+		}
+	}
+
+	private IEnumerator CC()
+	{
+		yield return new WaitForEndOfFrame();
+
+		if(!(blockManegement.CanBlockMove() || blockManegement.IsBlockMove))
+		{
+			Pause();
+
+			OverUI.SetActive(true);
 		}
 	}
 
@@ -74,7 +72,6 @@ public class BlockController : MonoBehaviour
 
 		if(score == 2048 && !isClear)
 		{
-			//클리어에 관련된 내용
 			isClear = true;
 
 			Pause();
