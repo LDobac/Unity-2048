@@ -6,11 +6,7 @@ public class NumBlock : MonoBehaviour
 {
 	public float blockMoveSpeed;
 
-
 	private const int basedNumber = 2; 
-
-
-
 
 	private bool isMove = false;
 	private Vector3 targetPosition;
@@ -49,6 +45,9 @@ public class NumBlock : MonoBehaviour
 				if(!combinedBlock.isMove)
 				{
 					Combine();
+					BlockController blockController = GameObject.FindGameObjectWithTag("NumBlockManeger").GetComponent<BlockController>();
+					blockController.AddScore(blockNumber);
+
 				}
 			}
 		}
@@ -91,7 +90,6 @@ public class NumBlock : MonoBehaviour
 		combinedBlock.IsCombine = true;
 		isCombine = true;
 	}
-
 
 	public void Move(Vector3 target)
 	{

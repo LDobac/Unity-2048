@@ -209,7 +209,8 @@ public class NumberBlockManegement : MonoBehaviour
                     }
                     else
                     {
-                        if(numBlocks[y,x + 1].GetComponent<NumBlock>().BlockNumber == numBlocks[y,x].GetComponent<NumBlock>().BlockNumber)
+                        if(numBlocks[y,x + 1].GetComponent<NumBlock>().BlockNumber == numBlocks[y,x].GetComponent<NumBlock>().BlockNumber
+                            && !(numBlocks[y,x + 1].GetComponent<NumBlock>().IsCombine || numBlocks[y,x].GetComponent<NumBlock>().IsCombine))
                         {
                             MoveBlock(x,y,x + 1,y,false);
                             CombineBlock(x,y,x + 1,y);
@@ -299,7 +300,8 @@ public class NumberBlockManegement : MonoBehaviour
                     }
                     else
                     {
-                        if(numBlocks[y - 1,x].GetComponent<NumBlock>().BlockNumber == numBlocks[y,x].GetComponent<NumBlock>().BlockNumber)
+                        if(numBlocks[y - 1,x].GetComponent<NumBlock>().BlockNumber == numBlocks[y,x].GetComponent<NumBlock>().BlockNumber
+                            && !(numBlocks[y - 1,x].GetComponent<NumBlock>().IsCombine || numBlocks[y,x].GetComponent<NumBlock>().IsCombine))
                         {
                             MoveBlock(x,y,x,y - 1,false);
                             CombineBlock(x,y,x,y - 1);
@@ -389,7 +391,9 @@ public class NumberBlockManegement : MonoBehaviour
                     }
                     else
                     {
-                        if(numBlocks[y + 1,x].GetComponent<NumBlock>().BlockNumber == numBlocks[y,x].GetComponent<NumBlock>().BlockNumber)
+
+                        if(numBlocks[y + 1,x].GetComponent<NumBlock>().BlockNumber == numBlocks[y,x].GetComponent<NumBlock>().BlockNumber
+                            && !(numBlocks[y + 1,x].GetComponent<NumBlock>().IsCombine || numBlocks[y,x].GetComponent<NumBlock>().IsCombine))
                         {
                             MoveBlock(x,y,x,y + 1,false);
                             CombineBlock(x,y,x,y + 1);
@@ -433,13 +437,61 @@ public class NumberBlockManegement : MonoBehaviour
         }
     }
 
-    private bool CreateNumberBlock()
+    public bool CanBlockMove()
     {
-        if(CheckArrayElementNull(numBlocks))
+        if(CheckBlocksAllAssign())
         {
+            for(int y = 0 ; y < 4 ; y++)
+            {
+                for(int x = 0 ; x < 4 ; x++)
+                {
+                    NumBlock numBlock = numBlocks[y,x].GetComponent<NumBlock>(); 
+                    if(x + 1 < 3)
+                    {
+                        if(numBlock.BlockNumber == numBlocks[y,x + 1].GetComponent<NumBlock>().BlockNumber)
+                        {
+                            return true;
+                        }
+                    }
+
+                    if(y + 1 < 3)
+                    {
+                        if(numBlock.BlockNumber == numBlocks[y + 1,x].GetComponent<NumBlock>().BlockNumber)
+                        {
+                            return true;
+                        }
+                    }
+
+                    if(x - 1 >= 0)
+                    {
+                        if(numBlock.BlockNumber == numBlocks[y,x - 1].GetComponent<NumBlock>().BlockNumber)
+                        {
+                            return true;
+                        }
+                    }
+
+                    if(y - 1 >= 0)
+                    {
+                        if(numBlock.BlockNumber == numBlocks[y - 1,x].GetComponent<NumBlock>().BlockNumber)
+                        {
+                            return true;
+                        }
+                    } 
+                }
+            }
+
             return false;
         }
 
+        return true;
+    }
+
+    private bool CreateNumberBlock()
+    {
+        if(CheckBlocksAllAssign())
+        {
+            return false;
+        }
 
         for(;;)
         {
@@ -457,13 +509,13 @@ public class NumberBlockManegement : MonoBehaviour
         return true;
     }
 
-    private bool CheckArrayElementNull(GameObject[,] array)
+    private bool CheckBlocksAllAssign()
     {
-        for(int i = 0 ; i < array.GetLength(0) ; i++)
+        for(int i = 0 ; i < 4 ; i++)
         {
-            for(int j = 0 ; j < array.GetLength(1) ; j++)
+            for(int j = 0 ; j < 4 ; j++)
             {
-                if(array[i,j] == null)
+                if(numBlocks[i,j] == null)
                 {
                     return false;
                 }
@@ -498,5 +550,13 @@ public class NumberBlockManegement : MonoBehaviour
     {
         numBlocks[y,x].GetComponent<NumBlock>().CombineBlock(numBlocks[cY,cX].GetComponent<NumBlock>());
         numBlocks[cY,cX] = null;
+    }
+
+    public bool IsBlockMove
+    {
+        get
+        {
+            return isBlockMove;
+        }
     }
 }
